@@ -1,0 +1,33 @@
+@model SystemSetup?
+@{
+	ViewData["Title"] = "System Setup";
+}
+
+    <a class="nav-link text-blue" asp-area="" asp-controller="SystemSetups" asp-action="Edit">Edit System Setup</a>
+
+
+@if (Model == null)
+{
+    <div class="alert alert-info">
+        System setup has not been configured yet.
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Base Path</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>@Model.Id</td>
+                    <td>@Model.BasePath</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+}

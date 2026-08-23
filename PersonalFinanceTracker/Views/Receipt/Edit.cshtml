@@ -1,0 +1,45 @@
+﻿@model Receipt
+
+@{
+}
+<form method="post" asp-action="Edit">
+    <div class="form-group">
+        <label asp-for="VendorId">Vendor</label>
+        <select asp-for="VendorId" asp-items="(IEnumerable<SelectListItem>)ViewBag.Vendors"
+                class="form-select form-select-lg">
+            <option value="0">--Select--</option>
+        </select>
+        <span asp-validation-for="VendorId" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ItemCount">ItemCount</label>
+        <input asp-for="ItemCount" class="form-control" placeholder="Enter Item Count">
+        <span asp-validation-for="ItemCount" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="SubTotal">SubTotal</label>
+        <input asp-for="SubTotal" type="number" step="0.01" min="0" class="form-control" placeholder="Enter SubTotal">
+        <span asp-validation-for="SubTotal" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Tax">Tax</label>
+        <input asp-for="Tax" type="number" step="0.01" min="0" class="form-control" placeholder="Enter Tax">
+        <span asp-validation-for="Tax" class="text-danger"></span>
+    </div>
+    <div class="form-check mb-3">
+        <input asp-for="Recurring" class="form-check-input">
+        <label asp-for="Recurring" class="form-check-label">Recurring</label>
+    </div>
+    <div class="form-group">
+        <label asp-for="TransactionDate">TransactionDate</label>
+        <input asp-for="TransactionDate" class="form-control" min="2010-01-01" max="@DateTime.Today.ToString("yyyy-MM-dd")" placeholder="Enter TransactionDate">
+        <span asp-validation-for="TransactionDate" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="PaymentMethod">PaymentMethod</label>
+        <select asp-for="PaymentMethod" asp-items="@Html.GetEnumSelectList<PaymentMethodEnums>()" class="form-control form-control-lg">
+        </select>
+        <span asp-validation-for="PaymentMethod" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>

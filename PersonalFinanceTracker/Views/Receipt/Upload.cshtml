@@ -1,0 +1,15 @@
+﻿
+
+<div class="alert alert-info">
+    Upload Receipt Below
+</div>
+
+
+<form method="post" asp-action="Upload" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="file">Receipt CSV</label>
+        <input type ="file" id="file" name="file" accept=".csv" class="form-control">
+    </div>
+    <div> </div>
+    <button type="submit" class="btn-dark">Upload</button>
+</form>

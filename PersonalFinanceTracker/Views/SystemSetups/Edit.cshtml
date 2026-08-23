@@ -1,0 +1,14 @@
+@model SystemSetup
+
+@{
+	ViewData["Title"] = "Edit System Setup";
+}
+<form method="post" asp-action="Edit">
+    <input type="hidden" asp-for="Id" />
+    <div class="form-group">
+        <label asp-for="BasePath">Base Path</label>
+        <input asp-for="BasePath" class="form-control" placeholder="Enter the receipt import folder path">
+        <span asp-validation-for="BasePath" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>

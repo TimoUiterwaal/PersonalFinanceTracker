@@ -1,0 +1,56 @@
+@model PersonalFinanceTracker.Receipt
+
+@{
+    ViewData["Title"] = "Receipt Details";
+}
+
+<div class="card shadow-sm mx-auto my-4" style="max-width: 32rem;">
+    <div class="card-header bg-light">
+        <h5 class="mb-0">Receipt #@Model.Id</h5>
+    </div>
+
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item d-flex justify-content-between">
+            <span class="text-muted">Vendor</span>
+            <span class="fw-semibold">@(Model.Vendor?.Name ?? "-")</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between">
+            <span class="text-muted">Payment Method</span>
+            <span class="fw-semibold">@Model.PaymentMethod</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between">
+            <span class="text-muted">Items</span>
+            <span class="fw-semibold">@Model.ItemCount</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between">
+            <span class="text-muted">Transaction Date</span>
+            <span class="fw-semibold">@Model.TransactionDate.ToLongDateString()</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between">
+            <span class="text-muted">Entered On</span>
+            <span class="fw-semibold">@Model.InputDate.ToLongDateString()</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between">
+            <span class="text-muted">Recurring</span>
+            <span class="fw-semibold">@(Model.Recurring ? "Yes" : "No")</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between">
+            <span class="text-muted">Subtotal</span>
+            <span class="fw-semibold">@Model.SubTotal.ToString("C")</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between">
+            <span class="text-muted">Tax</span>
+            <span class="fw-semibold">@Model.Tax.ToString("C")</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between bg-light">
+            <span class="fw-bold">Total</span>
+            <span class="fw-bold">@((Model.SubTotal + Model.Tax).ToString("C"))</span>
+        </li>
+    </ul>
+
+    <div class="card-footer d-flex gap-2">
+        <a asp-controller="Dashboard" asp-action="Details" asp-route-id="@Model.Id"class="btn btn-sm btn-outline-primary">Transaction Details</a>
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-sm btn-outline-primary">Edit</a>
+        <a class="btn btn-outline-secondary btn-sm" asp-action="Index">Back Receipt List</a>
+    </div>
+</div>

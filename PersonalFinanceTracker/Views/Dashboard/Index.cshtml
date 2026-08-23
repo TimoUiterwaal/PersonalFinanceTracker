@@ -1,0 +1,80 @@
+﻿@model DashboardViewItem
+
+@if (Model.Receipts is null || Model.Receipts.Count == 0)
+{
+    <div class="alert alert-info">
+        Input Date to see all receipts for day
+    </div>
+
+    <form method="post" asp-action="Search">
+        <div class="form-group mb-3">
+            <label asp-for="InputDate">Receipt Input Date</label>
+            <input asp-for="InputDate" class="form-control" min="2010-01-01" max="@DateTime.Today.ToString("yyyy-MM-dd")" placeholder="@DateTime.Today.ToString("yyyy-MM-dd")">
+            <span asp-validation-for="InputDate" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+}
+else if (Model.Transactions is not null && Model.Transactions.Count > 0)
+{
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Unit Price</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (Transaction tran in Model.Transactions)
+                {
+                    <tr>
+                        <td>@tran.Id</td>
+                        <td>@tran.Name</td>
+                        <td>@tran.UnitPrice</td>
+                        <td>@tran.Quantity</td>
+                        <td>@(tran.Total)</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+}
+else
+{
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Vendor Name</th>
+                    <th scope="col">Transaction Date</th>
+                    <th scope="col">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (Receipt receipt in Model.Receipts)
+                {
+                    <tr class="clickable-row" data-href="@Url.Action("Details", "Dashboard", new { id = receipt.Id })">
+                        <td>@receipt.Id</td>
+                        <td>@receipt.Vendor?.Name</td>
+                        <td>@receipt.TransactionDate.ToLongDateString()</td>
+                        <td>@(receipt.SubTotal + receipt.Tax)</td>
+                        <td>
+                            <a asp-controller="Dashboard" asp-action="Details" asp-route-id="@receipt.Id"
+                               class="btn btn-sm btn-outline-primary">Details</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <a asp-controller="Dashboard" asp-action="Index" class="btn btn-sm btn-outline-primary">Back to Search</a>
+}
+

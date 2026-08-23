@@ -1,0 +1,45 @@
+@model IEnumerable<Transaction>
+@{
+	ViewData["Title"] = "Transactions";
+}
+
+    <a class="nav-link text-blue" asp-area="" asp-controller="Transaction" asp-action="Create">Create New Transaction</a>
+
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        No Transactions have been submitted yet.
+    </div>
+}
+else
+{
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Receipt</th>
+                    <th scope="col">Item</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Unit Price</th>
+                    <th scope="col">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (Transaction transaction in Model)
+                {
+                    <tr>
+                        <td>@transaction.Id</td>
+                        <td>#@transaction.ReceiptId @transaction.Receipt?.Vendor?.Name</td>
+                        <td>@transaction.Name</td>
+                        <td>@transaction.Quantity</td>
+                        <td>@transaction.UnitPrice</td>
+                        <td>@transaction.Total</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

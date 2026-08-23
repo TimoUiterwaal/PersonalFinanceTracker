@@ -1,0 +1,41 @@
+﻿@model IEnumerable<Vendor>
+@{
+	ViewData["Title"] = "Vendors";
+}
+
+    <a class="nav-link text-blue" asp-area="" asp-controller="Vendor" asp-action="Create">Create New Vendor</a>
+
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        No Receipts have been submitted yet.
+    </div>
+}
+else
+{
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Vendor Name</th>
+                    <th scope="col">Location</th>
+                    <th scope="col">Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (Vendor vendor in Model)
+                {
+                    <tr>
+                        <td>@vendor.Id</td>
+                        <td>@vendor.Name</td>
+                        <td>@vendor.Location</td>
+                        <td>@vendor.Type</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

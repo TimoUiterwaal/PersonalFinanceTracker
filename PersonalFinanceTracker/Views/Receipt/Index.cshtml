@@ -1,0 +1,45 @@
+﻿@model IEnumerable<Receipt>
+@{
+	ViewData["Title"] = "Receipts";
+}
+<a class="nav-link text-blue" asp-area="" asp-controller="Receipt" asp-action="Create">Create New Receipt</a>
+<a class="nav-link text-blue" asp-area="" asp-controller="Receipt" asp-action="Upload">Upload New Receipt</a>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        No Receipts have been submitted yet.
+    </div>
+}
+else
+{
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Vendor Name</th>
+                    <th scope="col">Transaction Date</th>
+                    <th scope="col">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (Receipt receipt in Model)
+                {
+                    <tr>
+                        <td>@receipt.Id</td>
+                        <td>@receipt.Vendor.Name</td>
+                        <td>@receipt.TransactionDate.ToLongDateString()</td>
+                        <td>@(receipt.SubTotal + receipt.Tax)</td>
+                        <td>
+                            <a class="nav-link text-blue" asp-area="" asp-controller="Receipt" asp-action="Details" asp-route-id="@receipt.Id">Details</a>
+                        </td>
+
+                        
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
