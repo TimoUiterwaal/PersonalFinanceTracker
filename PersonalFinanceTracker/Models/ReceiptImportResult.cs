@@ -4,8 +4,8 @@
 	{
 		public int Rowsread { get; set; }
 		public int RowsImported { get; set; }
-		public List<int>? CreatedReceiptIds { get; set; }
-		public List<(int linenum, string errormessage)>? Errorlines { get; set; } = new();
+		public List<int> CreatedReceiptIds { get; set; } = new();
+		public List<(int linenum, string errormessage)> Errorlines { get; set; } = new();
 
 	}
 }

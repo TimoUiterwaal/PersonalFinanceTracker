@@ -17,7 +17,7 @@ namespace PersonalFinanceTracker
 					using var scope = _scopeFactory.CreateScope();
 					var _context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-					ReceiptImporterWrapper.StartImport(_context);
+					ImporterWrapper.ProcessImport(_context);
 
 				}
 				catch (Exception ex)
