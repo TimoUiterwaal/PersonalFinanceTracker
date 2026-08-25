@@ -151,7 +151,7 @@ namespace PersonalFinanceTracker
 		private ReceiptImportResult ProcessReceipt(IFormFile file)
 		{
 			using var stream = file.OpenReadStream();
-			var importerutility = new ReceiptImporterUtility(_context);
+			var importerutility = new ImporterUtility(_context);
 			var result = new ReceiptImporter(_context, importerutility).ImportReceipt(stream);
 
 			return result;
