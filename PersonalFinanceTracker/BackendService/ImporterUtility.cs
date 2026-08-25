@@ -19,6 +19,20 @@
 			}
 		}
 		public string GetBasePathFolder(ImportTypes import) => _systemSetup.BasePath + "\\" + import.ToString();
-		
+		public bool ParseBooleanValue(string input)
+		{
+			if (string.IsNullOrWhiteSpace(input)) return false;
+
+			if (input == "1") return true;
+			if (input == "0") return false;
+
+			// Fallback to standard bool parser for "true"/"false"
+			if (bool.TryParse(input, out bool result))
+			{
+				return result;
+			}
+
+			return false; // Default fallback
+		}
 	}
 }

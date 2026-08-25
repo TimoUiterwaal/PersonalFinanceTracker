@@ -16,6 +16,9 @@ namespace PersonalFinanceTracker
             builder.Services.AddControllersWithViews();
             builder.Services.AddDbContext<ApplicationDbContext>(options => {options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")); });
 			builder.Services.AddHostedService<PFMWorker>();
+			builder.Services.AddScoped<ImporterUtility>();
+			builder.Services.AddScoped<ReceiptImporter>();
+			builder.Services.AddScoped<TransactionImport>();
 
 			var app = builder.Build();
 

@@ -2,9 +2,11 @@
 
 namespace PersonalFinanceTracker
 {
-	public class PFMWorker(IServiceScopeFactory scopeFactory) :  BackgroundService
+	public class PFMWorker(IServiceScopeFactory scopeFactory, ILogger<PFMWorker> logger) :  BackgroundService
 	{
 		private readonly IServiceScopeFactory _scopeFactory = scopeFactory;
+		private readonly ILogger<PFMWorker> _logger = logger;
+
 
 		protected override async Task ExecuteAsync(CancellationToken stoppingToken) 
 		{
@@ -13,16 +15,17 @@ namespace PersonalFinanceTracker
 			{
 				try
 				{
-					Console.WriteLine($"Worker running at: {DateTime.Now}" );
+					_logger.LogInformation("Worker running at: {Time}", DateTime.Now);
 					using var scope = _scopeFactory.CreateScope();
-					var _context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-
-					ImporterWrapper.ProcessImport(_context);
+					var receiptImporter = scope.ServiceProvider.GetRequiredService<ReceiptImporter>();
+					var transactionImporter = scope.ServiceProvider.GetRequiredService<TransactionImport>();
+					receiptImporter.ProcessImportReceipt();
+					transactionImporter.ProcessImportTransaction();
 
 				}
 				catch (Exception ex)
 				{
-					Console.WriteLine($"Worker error at: {ex}");
+					_logger.LogError(ex, "Worker error");
 				}
 
 				await Task.Delay(1_000, stoppingToken);

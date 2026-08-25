@@ -2,7 +2,7 @@
 
 namespace PersonalFinanceTracker
 {
-	public class ReceiptImporter(ApplicationDbContext _context, ImporterUtility _importerUtility)
+	public class ReceiptImporter(ApplicationDbContext _context, ImporterUtility _importerUtility, ILogger<TransactionImport> _logger)
 	{
 		public void ProcessImportReceipt()
 		{
@@ -19,12 +19,13 @@ namespace PersonalFinanceTracker
 				{
 					using var stream = File.OpenRead(path);
 					ImportReceipt(stream);
-					_importerUtility.RemoveBasePathFiles(".csv", ImportTypes.Receipt);
+					
 				}
-
+				_importerUtility.RemoveBasePathFiles(".csv", ImportTypes.Receipt);
 			}
 
 		}
+
 		//could pass file mapping format here to allow for different formats, but for now, we will assume a single format
 		public ReceiptImportResult ImportReceipt(Stream file)
 		{
@@ -42,6 +43,7 @@ namespace PersonalFinanceTracker
 
 				if (csvfields.Length != 7)
 				{
+					_logger.LogWarning("Row {Row}: expected 5 fields, got {Count}", receiptImportResult.Rowsread, csvfields.Length);
 					receiptImportResult.Errorlines.Add((receiptImportResult.Rowsread, "Unexpected Number of Rows"));
 					continue;
 				}
@@ -50,6 +52,8 @@ namespace PersonalFinanceTracker
 				{
 					if (csvfields[j].Length == 0)
 					{
+						_logger.LogWarning("Row {Row}: empty fields in {j}", receiptImportResult.Rowsread, j);
+
 						receiptImportResult.Errorlines.Add((receiptImportResult.Rowsread, $"Empty Value in position {j}"));
 						rowerror++;
 					}
@@ -65,17 +69,25 @@ namespace PersonalFinanceTracker
 
 				var newreceipt = new Receipt();
 
-				//TODO add failure catch using Try parse and add to error lines if fails, for now, we will assume all data is valid
+				try { 
 				newreceipt.VendorId = int.Parse(newrow.VendorId);
 				newreceipt.PaymentMethod = Enum.Parse<PaymentMethodEnums>(newrow.PaymentMethod);
 				newreceipt.ItemCount = int.Parse(newrow.ItemCount);
 				newreceipt.SubTotal = decimal.Parse(newrow.Subtotal);
 				newreceipt.Tax = decimal.Parse(newrow.Tax);
-				newreceipt.Recurring = bool.Parse(newrow.Recurring);
+				newreceipt.Recurring = _importerUtility.ParseBooleanValue(newrow.Recurring);
 				newreceipt.TransactionDate = DateTime.Parse(newrow.TransactionDate);
+				}
+				catch
+				{
+					_logger.LogWarning("Row {Row}: Error Importing row", receiptImportResult.Rowsread);
+					receiptImportResult.Errorlines.Add((receiptImportResult.Rowsread, $"Error Importing row"));
+					continue;
+				}
 
 				_context.Receipt.Add(newreceipt);
-				
+
+				_logger.LogInformation("Imported {Imported} of {Read} rows", receiptImportResult.RowsImported, receiptImportResult.Rowsread);
 				receiptImportResult.RowsImported++;
 			}
 			_context.SaveChanges();
